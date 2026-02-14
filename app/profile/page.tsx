@@ -149,11 +149,40 @@ export default function ProfilePage() {
     );
   }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Header title="Profile" showHomeLink={true} showAdvertiseLink={true} />
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="text-center">
+            <Loader className="w-12 h-12 text-orange-500 animate-spin mx-auto mb-4 opacity-20" />
+            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Loading Identity...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header title="User Profile" showHomeLink={true} showAdvertiseLink={true} />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-6 py-10">
+        {/* Status Messages */}
+        <div className="fixed top-24 right-6 z-50 flex flex-col gap-2 pointer-events-none">
+          {error && (
+            <div className="bg-red-500 text-white px-6 py-4 rounded-2xl shadow-2xl animate-in slide-in-from-right fade-in pointer-events-auto flex items-center gap-3">
+              <span className="text-xl font-bold">!</span>
+              <span className="font-bold text-sm">{error}</span>
+            </div>
+          )}
+          {success && (
+            <div className="bg-green-500 text-white px-6 py-4 rounded-2xl shadow-2xl animate-in slide-in-from-right fade-in pointer-events-auto flex items-center gap-3">
+              <span className="text-xl font-bold">✓</span>
+              <span className="font-bold text-sm">{success}</span>
+            </div>
+          )}
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
           {/* Sidebar / Settings */}
