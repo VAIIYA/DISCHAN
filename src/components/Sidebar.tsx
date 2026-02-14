@@ -9,7 +9,6 @@ import {
     TrendingUp,
     PlusSquare,
     LayoutDashboard,
-    LogOut,
     Bell,
     Search
 } from 'lucide-react';
