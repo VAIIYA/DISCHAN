@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Design tokens */
+:root {
+  --brand-start: #f97316;
+  --brand-end: #f472b6;
+  --brand-track: #fed7aa;
+  --brand-thumb: #f97316;
+  --brand-thumb-hover: #ea580c;
+}
+
+@layer base {
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+  }
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+  ::-webkit-scrollbar-track {
+    background: var(--brand-track);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--brand-thumb);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-thumb-hover);
+  }
