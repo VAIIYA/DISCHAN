@@ -37,7 +37,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     const loadWalletState = () => {
       try {
         if (typeof window !== 'undefined') {
-          const savedWallet = localStorage.getItem('dischan-wallet');
+          const savedWallet = localStorage.getItem('hashhouse-wallet');
           if (savedWallet) {
             try {
               const parsedWallet = JSON.parse(savedWallet);
@@ -45,7 +45,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
               setWallet(parsedWallet);
             } catch (parseError) {
               console.error('Failed to parse saved wallet state:', parseError);
-              localStorage.removeItem('dischan-wallet');
+              localStorage.removeItem('hashhouse-wallet');
             }
           }
         }
@@ -57,7 +57,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
           connected: false,
           connecting: false
         });
-        localStorage.removeItem('dischan-wallet');
+        localStorage.removeItem('hashhouse-wallet');
       }
     };
 
@@ -69,10 +69,10 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     try {
       if (typeof window !== 'undefined') {
         if (wallet.connected) {
-          localStorage.setItem('dischan-wallet', JSON.stringify(wallet));
+          localStorage.setItem('hashhouse-wallet', JSON.stringify(wallet));
           console.log('Wallet state saved to localStorage');
         } else {
-          localStorage.removeItem('dischan-wallet');
+          localStorage.removeItem('hashhouse-wallet');
           console.log('Wallet state removed from localStorage');
         }
       }
@@ -119,7 +119,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
             connecting: false
           };
           setWallet(newWalletState);
-          localStorage.setItem('dischan-wallet', JSON.stringify(newWalletState));
+          localStorage.setItem('hashhouse-wallet', JSON.stringify(newWalletState));
         }
       } catch (error) {
         console.error('Error handling wallet connect event:', error);
@@ -135,7 +135,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
           connecting: false
         };
         setWallet(newWalletState);
-        localStorage.removeItem('dischan-wallet');
+        localStorage.removeItem('hashhouse-wallet');
       } catch (error) {
         console.error('Error handling wallet disconnect event:', error);
       }
@@ -165,8 +165,8 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
           const phantom = (window as any).solana;
           if (phantom?.isPhantom && phantom.isConnected) {
             const publicKey = phantom.publicKey.toString();
-            const savedWallet = localStorage.getItem('dischan-wallet');
-            
+            const savedWallet = localStorage.getItem('hashhouse-wallet');
+
             if (savedWallet) {
               try {
                 const parsedWallet = JSON.parse(savedWallet);
@@ -195,7 +195,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     // Check immediately and also after a short delay to ensure Phantom is loaded
     checkAndRestoreWallet();
     const timeoutId = setTimeout(checkAndRestoreWallet, 100);
-    
+
     return () => clearTimeout(timeoutId);
   }, []); // Run only on mount
 
@@ -205,20 +205,20 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
 
       if (typeof window !== 'undefined' && 'solana' in window) {
         const phantom = (window as any).solana;
-        
+
         if (phantom?.isPhantom) {
           try {
             const response = await phantom.connect();
             const publicKey = response.publicKey.toString();
-            
+
             const newWalletState = {
               publicKey,
               connected: true,
               connecting: false
             };
-            
+
             setWallet(newWalletState);
-            localStorage.setItem('dischan-wallet', JSON.stringify(newWalletState));
+            localStorage.setItem('hashhouse-wallet', JSON.stringify(newWalletState));
             console.log('Wallet connected successfully:', publicKey);
           } catch (connectError) {
             console.error('Phantom connect failed:', connectError);
@@ -245,14 +245,14 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         const phantom = (window as any).solana;
         phantom?.disconnect();
       }
-      
+
       const newWalletState = {
         publicKey: '',
         connected: false,
         connecting: false
       };
       setWallet(newWalletState);
-      localStorage.removeItem('dischan-wallet');
+      localStorage.removeItem('hashhouse-wallet');
       console.log('Wallet disconnected successfully');
     } catch (error) {
       console.error('Error disconnecting wallet:', error);
@@ -263,7 +263,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         connecting: false
       };
       setWallet(newWalletState);
-      localStorage.removeItem('dischan-wallet');
+      localStorage.removeItem('hashhouse-wallet');
     }
   };
 
@@ -275,18 +275,18 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
 
       if (typeof window !== 'undefined' && 'solana' in window) {
         const phantom = (window as any).solana;
-        
+
         if (!phantom?.isPhantom) {
           throw new Error('Phantom wallet not available');
         }
-        
+
         const encodedMessage = new TextEncoder().encode(message);
         const signedMessage = await phantom.signMessage(encodedMessage, 'utf8');
-        
+
         if (!signedMessage?.signature) {
           throw new Error('No signature received from wallet');
         }
-        
+
         // Convert to base64 for storage
         const signature = Buffer.from(signedMessage.signature).toString('base64');
         console.log('Message signed successfully');

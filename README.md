@@ -1,4 +1,4 @@
-# Dischan
+# HashHouse
 
 A 4Chan clone built with Next.js, React, TypeScript, and Tailwind CSS.
 

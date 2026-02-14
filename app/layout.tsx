@@ -7,7 +7,7 @@ import { Sidebar } from '@/components/Sidebar'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Dischan',
+  title: 'HashHouse',
   description: 'Anonymous discussion platform powered by Solana',
   icons: {
     icon: '/favicon.png',

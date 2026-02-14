@@ -13,22 +13,22 @@ const MAX_THREADS = 100;
 export async function uploadToCloudinary(file: File, fileName: string) {
   try {
     console.log(`Uploading ${fileName} to Cloudinary...`);
-    
+
     if (!process.env.CLOUDINARY_CLOUD_NAME) {
       throw new Error('Cloudinary configuration is missing');
     }
-    
+
     // Convert File to buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    
+
     // Upload to Cloudinary
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
-          public_id: `dischan/${fileName}`,
+          public_id: `hashhouse/${fileName}`,
           resource_type: 'auto', // Automatically detect image/video
-          folder: 'dischan',
+          folder: 'hashhouse',
           use_filename: true,
           unique_filename: true,
         },
@@ -38,10 +38,10 @@ export async function uploadToCloudinary(file: File, fileName: string) {
         }
       ).end(buffer);
     });
-    
+
     if (result && typeof result === 'object' && 'secure_url' in result) {
       console.log(`File uploaded successfully: ${result.secure_url}`);
-      
+
       return {
         success: true,
         url: result.secure_url,
@@ -64,13 +64,13 @@ export async function uploadBufferToCloudinary(buffer: Buffer, fileName: string,
   try {
     console.log(`Uploading buffer ${fileName} to Cloudinary...`);
     console.log('Buffer size:', buffer.length, 'MIME type:', mimeType);
-    
+
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
-          public_id: `dischan/${fileName}`,
+          public_id: `hashhouse/${fileName}`,
           resource_type: 'raw', // Use 'raw' for JSON files
-          folder: 'dischan',
+          folder: 'hashhouse',
           use_filename: true,
           unique_filename: true,
         },
@@ -85,7 +85,7 @@ export async function uploadBufferToCloudinary(buffer: Buffer, fileName: string,
         }
       ).end(buffer);
     });
-    
+
     if (result && typeof result === 'object' && 'secure_url' in result) {
       return {
         success: true,
@@ -107,7 +107,7 @@ export function addMediaFileToThread(thread: any, mediaFile: any) {
   if (!thread.mediaFiles) {
     thread.mediaFiles = [];
   }
-  
+
   thread.mediaFiles.push({
     publicId: mediaFile.publicId,
     url: mediaFile.url,
@@ -115,7 +115,7 @@ export function addMediaFileToThread(thread: any, mediaFile: any) {
     fileType: mediaFile.fileType,
     uploadedAt: new Date().toISOString()
   });
-  
+
   console.log(`Added media file ${mediaFile.publicId} to thread ${thread.id}`);
   return thread;
 }
@@ -124,9 +124,9 @@ export function addMediaFileToThread(thread: any, mediaFile: any) {
 export async function deleteFromCloudinary(publicId: string) {
   try {
     console.log(`Deleting file from Cloudinary: ${publicId}`);
-    
+
     const result = await cloudinary.uploader.destroy(publicId);
-    
+
     if (result.result === 'ok') {
       console.log(`File deleted successfully: ${publicId}`);
       return { success: true, publicId, deleted: true };
@@ -144,9 +144,9 @@ export async function deleteFromCloudinary(publicId: string) {
 export async function getFileInfo(publicId: string) {
   try {
     console.log(`Getting file info from Cloudinary: ${publicId}`);
-    
+
     const result = await cloudinary.api.resource(publicId);
-    
+
     return {
       exists: true,
       size: result.bytes,
@@ -168,33 +168,33 @@ export async function saveThreadsDataToCloudinary(data: any) {
       hasThreads: !!(data && data.threads),
       threadCount: data?.threads?.length || 0
     });
-    
+
     if (!data || !data.threads || !Array.isArray(data.threads)) {
       throw new Error('Invalid data structure');
     }
-    
+
     console.log(`Saving ${data.threads.length} threads to Cloudinary`);
-    
+
     // Cleanup old threads if we're at the limit
     if (data.threads.length > MAX_THREADS) {
       console.log(`Thread limit exceeded (${data.threads.length} > ${MAX_THREADS}), cleaning up...`);
-      
+
       // Sort threads by creation date (oldest first)
-      const sortedThreads = [...data.threads].sort((a, b) => 
+      const sortedThreads = [...data.threads].sort((a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
-      
+
       // Keep only the newest threads
       const threadsToKeep = sortedThreads.slice(-MAX_THREADS);
       const threadsToDelete = sortedThreads.slice(0, sortedThreads.length - MAX_THREADS);
-      
+
       console.log(`Deleting ${threadsToDelete.length} old threads and their media files...`);
-      
+
       // Delete media files associated with old threads
       for (const thread of threadsToDelete) {
         if (thread.mediaFiles && thread.mediaFiles.length > 0) {
           console.log(`Deleting ${thread.mediaFiles.length} media files for thread ${thread.id}`);
-          
+
           for (const mediaFile of thread.mediaFiles) {
             try {
               // Note: Cloudinary files are immutable, we just remove them from the index
@@ -205,19 +205,19 @@ export async function saveThreadsDataToCloudinary(data: any) {
           }
         }
       }
-      
+
       // Update data with cleaned threads
       data.threads = threadsToKeep;
       console.log(`Cleaned up to ${data.threads.length} threads`);
     }
-    
+
     // Create a JSON file with the threads data
     const jsonData = JSON.stringify(data, null, 2);
     const buffer = Buffer.from(jsonData, 'utf8');
-    
+
     console.log('Uploading threads data to Cloudinary, buffer size:', buffer.length);
     const result = await uploadBufferToCloudinary(buffer, 'threads.json', 'application/json');
-    
+
     console.log('Threads data saved to Cloudinary:', result.url);
     return result;
   } catch (error) {
@@ -230,7 +230,7 @@ export async function saveThreadsDataToCloudinary(data: any) {
 export async function loadThreadsDataFromCloudinary() {
   try {
     console.log('Loading threads data from Cloudinary...');
-    
+
     // Check if Cloudinary is configured
     if (!process.env.CLOUDINARY_CLOUD_NAME) {
       console.warn('Cloudinary is not configured, returning empty data');
@@ -241,13 +241,13 @@ export async function loadThreadsDataFromCloudinary() {
         lastUpdated: new Date().toISOString()
       };
     }
-    
+
     // Try to get the threads.json file from Cloudinary
     try {
       console.log('Attempting to load threads.json from Cloudinary...');
-      const result = await cloudinary.api.resource('dischan/threads.json');
+      const result = await cloudinary.api.resource('hashhouse/threads.json');
       console.log('Cloudinary API result:', result);
-      
+
       if (result && result.secure_url) {
         console.log('Fetching data from URL:', result.secure_url);
         const response = await fetch(result.secure_url);
@@ -259,7 +259,7 @@ export async function loadThreadsDataFromCloudinary() {
       console.error('Failed to download threads data from Cloudinary:', downloadError);
       // Fall through to return empty data
     }
-    
+
     // Return empty data if no file is found or download failed
     console.log('No valid threads data found, returning empty data');
     return {
@@ -294,16 +294,16 @@ export function generateSlug(title: string): string {
 // Generate unique slug with collision handling
 export function generateUniqueSlug(threads: any[], title: string): string {
   let baseSlug = generateSlug(title);
-  
+
   if (!baseSlug) {
     baseSlug = 'untitled';
   }
-  
+
   const existingSlugs = threads.map(t => t.slug);
   if (!existingSlugs.includes(baseSlug)) {
     return baseSlug;
   }
-  
+
   const timestamp = Date.now().toString().slice(-6);
   return `${baseSlug}-${timestamp}`;
 }
@@ -311,7 +311,7 @@ export function generateUniqueSlug(threads: any[], title: string): string {
 // Pagination helper
 export function getThreadsForPage(threads: any[], page: number) {
   const THREADS_PER_PAGE = 100; // Show all threads on one page for simplicity
-  
+
   if (page < 1) {
     return {
       threads: [],
@@ -320,11 +320,11 @@ export function getThreadsForPage(threads: any[], page: number) {
       totalThreads: threads.length
     };
   }
-  
+
   const startIndex = (page - 1) * THREADS_PER_PAGE;
   const endIndex = startIndex + THREADS_PER_PAGE;
   const pageThreads = threads.slice(startIndex, endIndex);
-  
+
   return {
     threads: pageThreads,
     page,

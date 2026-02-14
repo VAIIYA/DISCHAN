@@ -18,7 +18,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   showHomeLink = true,
   showAdvertiseLink = true,
-  title = 'Dischan',
+  title = 'HashHouse',
   onBack
 }) => {
   const { wallet } = useWallet();
@@ -50,13 +50,13 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="w-8 h-8 flex items-center justify-center">
                 <img
                   src="/logo.png"
-                  alt="Dischan Logo"
+                  alt="HashHouse Logo"
                   className="w-8 h-8"
                 />
               </div>
               <div className="flex flex-col">
-                <h1 className="text-2xl font-bold text-orange-600">Dischan</h1>
-                {title && title !== 'Dischan' && (
+                <h1 className="text-2xl font-bold text-orange-600">HashHouse</h1>
+                {title && title !== 'HashHouse' && (
                   <span className="text-sm text-gray-600">{title}</span>
                 )}
               </div>

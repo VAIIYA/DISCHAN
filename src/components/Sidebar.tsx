@@ -75,7 +75,7 @@ export const Sidebar = () => {
                 <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-xl">D</span>
                 </div>
-                <h1 className="text-xl font-bold text-white tracking-tight">Dischan</h1>
+                <h1 className="text-xl font-bold text-white tracking-tight">HashHouse</h1>
             </div>
 
             {/* Main Navigation */}

@@ -1,4 +1,4 @@
-# Environment Variables Setup for Dischan
+# Environment Variables Setup for HashHouse
 
 ## Required Environment Variables
 
@@ -15,7 +15,7 @@ Add these to your Vercel environment variables:
    - Example: `your-generated-secret-key-here`
 
 2. **NEXTAUTH_URL** (Required)
-   - Set to: `https://dischan.vercel.app`
+   - Set to: `https://hashhouse.vercel.app`
    - For local development: `http://localhost:3000`
 
 ### 🟡 Optional (for Email Provider)
@@ -31,7 +31,7 @@ If you want to enable email-based sign in (magic links), configure SMTP:
 
 5. **SMTP_USER** (Optional)
    - Your SMTP username/email
-   - Example: `noreply@dischan.vercel.app`
+   - Example: `noreply@hashhouse.vercel.app`
 
 6. **SMTP_PASSWORD** (Optional)
    - Your SMTP password
@@ -39,7 +39,7 @@ If you want to enable email-based sign in (magic links), configure SMTP:
 
 7. **SMTP_FROM** (Optional)
    - Email address to send from
-   - Defaults to: `noreply@dischan.vercel.app`
+   - Defaults to: `noreply@hashhouse.vercel.app`
 
 ### 🟡 Optional (for Cleanup Job)
 8. **CLEANUP_SECRET** (Optional)
@@ -59,7 +59,7 @@ If you want to enable email-based sign in (magic links), configure SMTP:
    - Navigate to "Environment Variables"
    - Add:
      - `NEXTAUTH_SECRET` = (generated secret)
-     - `NEXTAUTH_URL` = `https://dischan.vercel.app`
+     - `NEXTAUTH_URL` = `https://hashhouse.vercel.app`
 
 3. **Redeploy:**
    - After adding environment variables, redeploy your application
@@ -75,7 +75,7 @@ If you want to enable email-based sign in (magic links), configure SMTP:
 ## Testing
 
 After deployment:
-1. Visit `https://dischan.vercel.app/auth/signup`
+1. Visit `https://hashhouse.vercel.app/auth/signup`
 2. Create an account with email/password
 3. Sign in and create threads/posts
 4. Files will be stored in MongoDB GridFS

@@ -45,7 +45,7 @@ export default function HomePage() {
               We. As One.
             </h1>
             <p className="text-xl text-orange-50/90 mb-8 leading-relaxed">
-              Welcome to <strong>Dischan</strong>. The ultimate decentralized discussion board
+              Welcome to <strong>HashHouse</strong>. The ultimate decentralized discussion board
               bridging the gap between legacy imageboards and modern chat ecosystems.
             </p>
             <div className="flex flex-wrap gap-4">

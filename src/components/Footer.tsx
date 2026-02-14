@@ -23,7 +23,7 @@ export const Footer: React.FC = () => {
 
         <div className="text-center mt-6 space-y-4">
           <p className="text-gray-600 text-sm">
-            Dischan - Anonymous discussion platform powered by Solana
+            HashHouse - Anonymous discussion platform powered by Solana
           </p>
           <p className="text-gray-600 text-sm">
             All posts are anonymous. Connect your Solana wallet to create threads and post replies.
